@@ -7,7 +7,7 @@ public class Node {
     private int data;
     private int[] position = {0, 0};
 
-    //constructor
+    // constructor
     public Node(Node givenLeft, Node givenRight, Node givenParent, int givenData){
         leftNode = givenLeft;
         rightNode = givenRight;
@@ -15,7 +15,7 @@ public class Node {
         data = givenData;
     }
 
-    //get/set methods
+    // get/set methods
     public int getData() {return data;}
 
     public Node getLeftNode() {return leftNode;}
@@ -34,12 +34,13 @@ public class Node {
 
     public void setParent(Node newParent) {parent = newParent;}
 
-    //other methods
+    // other methods
     public boolean isLeaf() {
         return (leftNode == null && rightNode == null);
     }
 
     public void updatePosition() {
+        // update position of node for gui
         if (parent.getData() > data) {
             if (getParent().getParent() != null) {
                 int difference = Math.abs(getParent().getPosition()[0] - getParent().getParent().getPosition()[0]);
@@ -60,6 +61,7 @@ public class Node {
     }
 
     public int getNodeHeight() {
+        // get height of node in tree
         if (isLeaf()) {
             return 1;
         } else {
@@ -85,6 +87,7 @@ public class Node {
     }
 
     public int getNodeDepth() {
+        // get depth of node in tree
         if (getParent() == null) {
             return 0;
         } else {
@@ -93,18 +96,18 @@ public class Node {
     }
 
     public void printStat() {
-        //print out node info
+        // print out node info
         System.out.println("-----------");
         System.out.println("For node:  " + data);
 
-        //check if node is root now of tree
+        // check if node is root now of tree
         if (parent == null) {
             System.out.println("ROOT");
         } else {
             System.out.println("Parent:  " + parent.getData());
         }
 
-        //print out info about lower nodes
+        // print out info about lower nodes
         if (isLeaf()) {
             System.out.println("LEAF");
         } else {
