@@ -1,11 +1,12 @@
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,11 +26,19 @@ public class GUI extends Application {
             tree1.addNode(tree1.getRoot(), new Node(null, null, null, node));
         }
 
-        // set positionsof nodes for where they should be placed on the tree window
+        // set positions of nodes for where they should be placed on the tree window
         tree1.setNodeGUIPositions(500, 500, tree1.getRoot());
 
-        // create group for root objects to be displayed
-        Group rootGroup = getGroup(tree1);
+        // create group for tree objects to be displayed
+        Group treeGroup = getTreeGroup(tree1);
+
+        // create group for input methods
+        Group inputGroup = getInputGroup();
+
+        // create group for all items
+        Group rootGroup = new Group();
+        rootGroup.getChildren().add(treeGroup);
+        rootGroup.getChildren().add(inputGroup);
 
         // set title for window
         primaryStage.setTitle("Tree Example");
@@ -39,7 +48,8 @@ public class GUI extends Application {
         primaryStage.show();
     }
 
-    public Group getGroup(Tree tree1) {
+    public Group getTreeGroup(Tree tree1) {
+        // create group and add tree nodes to it
         Group thisGroup = new Group();
 
         // loop through nodes using breadth-first search
@@ -62,6 +72,28 @@ public class GUI extends Application {
                 thisGroup.getChildren().add(new Line(x+10, y+5, rightNodePosition[0] -5, rightNodePosition[1] -10));
             }
         }
+
+        return thisGroup;
+    }
+
+    public Group getInputGroup() {
+        Group thisGroup = new Group();
+
+        // create test input field
+        TextField textfield = new TextField();
+        textfield.setLayoutX(500);
+        textfield.setLayoutY(50);
+
+        // create test button
+        Button button = new Button("this label");
+        button.setLayoutX(500);
+        button.setLayoutY(0);
+        button.setOnAction(actionEvent -> {
+            System.out.println(textfield.getText());
+        });
+
+        thisGroup.getChildren().add(button);
+        thisGroup.getChildren().add(textfield);
 
         return thisGroup;
     }
