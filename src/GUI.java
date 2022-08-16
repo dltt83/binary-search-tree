@@ -8,47 +8,46 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //create variables to easily change size of tree window
+        Integer treeWinX = 500;
+        Integer treeWinY = 500;
+
         // instantiate new tree class
         Tree tree1 = new Tree(new Node(null, null, null, 8));
 
         // create list of nodes to be added
-        Integer[] nodesToAdd = {4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15};
+        Integer[] nodesToAdd = {4, 12, 2, 6, 10, 14};
 
         // loop through and add nodes to tree
         for (int node : nodesToAdd) {
             tree1.addNode(tree1.getRoot(), new Node(null, null, null, node));
         }
 
-        // set positions of nodes for where they should be placed on the tree window
-        tree1.setNodeGUIPositions(500, 500, tree1.getRoot());
+        // create root group for things to be added to
+        Group rootGroup = new Group();
 
         // create group for tree objects to be displayed
-        Group treeGroup = getTreeGroup(tree1);
+        getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
 
         // create group for input methods
-        Group inputGroup = getInputGroup();
-
-        // create group for all items
-        Group rootGroup = new Group();
-        rootGroup.getChildren().add(treeGroup);
-        rootGroup.getChildren().add(inputGroup);
+        getInputGroup(tree1, rootGroup, treeWinX, treeWinY);
 
         // set title for window
         primaryStage.setTitle("Tree Example");
         // set scene and add new group
-        primaryStage.setScene(new Scene(rootGroup, 800, 500));
+        primaryStage.setScene(new Scene(rootGroup, treeWinX+300, treeWinY));
         // show window
         primaryStage.show();
     }
 
-    public Group getTreeGroup(Tree tree1) {
+    public void getTreeGroup(Tree tree1, Group rootGroup, Integer treeWinX, Integer treeWinY) {
+        // set positions of nodes for where they should be placed on the tree window
+        tree1.setNodeGUIPositions(treeWinX, treeWinY, tree1.getRoot());
+
         // create group and add tree nodes to it
         Group thisGroup = new Group();
 
@@ -73,29 +72,63 @@ public class GUI extends Application {
             }
         }
 
-        return thisGroup;
+        // add new group to root
+        rootGroup.getChildren().add(thisGroup);
     }
 
-    public Group getInputGroup() {
+    public void getInputGroup(Tree tree1, Group rootGroup, Integer treeWinX, Integer treeWinY) {
         Group thisGroup = new Group();
 
         // create test input field
-        TextField textfield = new TextField();
-        textfield.setLayoutX(500);
-        textfield.setLayoutY(50);
+        TextField inputField = new TextField();
+        inputField.setLayoutX(500);
+        inputField.setLayoutY(0);
 
-        // create test button
-        Button button = new Button("this label");
-        button.setLayoutX(500);
-        button.setLayoutY(0);
-        button.setOnAction(actionEvent -> {
-            System.out.println(textfield.getText());
+        // create button to add new node to tree
+        Button addButton = new Button("Add Node");
+        addButton.setLayoutX(treeWinX);
+        addButton.setLayoutY(50);
+        addButton.setOnAction(actionEvent -> {
+            try {
+                Integer intInput = Integer.parseInt(inputField.getText());
+                tree1.addNode(tree1.getRoot(), new Node(null, null, null, intInput));
+
+                rootGroup.getChildren().remove(0);
+                rootGroup.getChildren().remove(0);
+
+                rootGroup.getChildren().add(thisGroup);
+                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+            } catch (NumberFormatException ex) {
+                System.out.println("Not a number");
+            }
         });
 
-        thisGroup.getChildren().add(button);
-        thisGroup.getChildren().add(textfield);
+        // create button to remove nodes from tree
+        // create test button
+        Button removeButton = new Button("Remove Node");
+        removeButton.setLayoutX(treeWinX);
+        removeButton.setLayoutY(100);
+        removeButton.setOnAction(actionEvent -> {
+            try {
+                Integer intInput = Integer.parseInt(inputField.getText());
+                tree1.removeNode(tree1.getRoot(), intInput);
 
-        return thisGroup;
+                rootGroup.getChildren().remove(0);
+                rootGroup.getChildren().remove(0);
+
+                rootGroup.getChildren().add(thisGroup);
+                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+            } catch (NumberFormatException ex) {
+                System.out.println("Not a number");
+            }
+        });
+
+        thisGroup.getChildren().add(addButton);
+        thisGroup.getChildren().add(removeButton);
+        thisGroup.getChildren().add(inputField);
+
+        // add group to root
+        rootGroup.getChildren().add(thisGroup);
     }
 
     public static void main(String[] args) {

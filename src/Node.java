@@ -119,8 +119,8 @@ public class Node {
             }
         }
 
-        System.out.println(getNodeDepth());
-        System.out.println(getNodeHeight());
+        System.out.println("Depth:  " + getNodeDepth());
+        System.out.println("Height:  " + getNodeHeight());
         System.out.println(Arrays.toString(position));
         System.out.println("----------- \n");
     }

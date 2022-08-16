@@ -59,7 +59,7 @@ public class Tree {
 
     public void setNodeGUIPositions(int maxX, int maxY, Node rootNode) {
         // set root node to be at top of page in the middle
-        root.setPosition(new int[]{maxX / 2, (maxY / (root.getNodeHeight() + 1))});
+        rootNode.setPosition(new int[]{maxX / 2, (maxY / (rootNode.getNodeHeight() + 1))});
 
         // loop through nodes and update position of each
         for (Node currentNode : BFS(root)) {
@@ -159,24 +159,41 @@ public class Tree {
                 Node replaceRight = replacement.getRightNode();
                 Node currentRight = currentNode.getRightNode();
 
-                replacement.setParent(parent);
 
-                if (replacement.getData() < parent.getData()) {
-                    parent.setLeftNode(replacement);
+                if (currentRight.getLeftNode() == null) {
+                    // for when replacement has no left node
+                    replacement.setParent(parent);
+
+                    if (replacement.getData() < parent.getData()) {
+                        parent.setLeftNode(replacement);
+                    } else {
+                        parent.setRightNode(replacement);
+                    }
+
+                    replacement.setLeftNode(currentNode.getLeftNode());
+                    replacement.getLeftNode().setParent(replacement);
                 } else {
-                    parent.setRightNode(replacement);
+                    // for when replacement has 2 children
+
+                    replacement.setParent(parent);
+
+                    if (replacement.getData() < parent.getData()) {
+                        parent.setLeftNode(replacement);
+                    } else {
+                        parent.setRightNode(replacement);
+                    }
+
+                    replacement.setLeftNode(currentNode.getLeftNode());
+                    replacement.getLeftNode().setParent(replacement);
+
+                    currentRight.setLeftNode(replaceRight);
+                    if (replaceRight != null) {
+                        replaceRight.setParent(currentRight);
+                    }
+
+                    replacement.setRightNode(currentRight);
+                    currentRight.setParent(replacement);
                 }
-
-                replacement.setLeftNode(currentNode.getLeftNode());
-                replacement.getLeftNode().setParent(replacement);
-
-                currentRight.setLeftNode(replaceRight);
-                if (replaceRight != null) {
-                    replaceRight.setParent(currentRight);
-                }
-
-                replacement.setRightNode(currentRight);
-                currentRight.setParent(replacement);
 
             } else {
                 // remove node if node has 1 child
