@@ -94,7 +94,7 @@ public class Tree {
     }
 
     public Node getSmallest(Node currentNode) {
-        // recursively finds smallest node in given subtree
+        // recursively finds the smallest node in given subtree
         if (currentNode.getLeftNode() != null) {
             return getSmallest(currentNode.getLeftNode());
         } else {
@@ -103,7 +103,7 @@ public class Tree {
     }
 
     public Node getLargest(Node currentNode) {
-        // recursively finds largest node in given subtree
+        // recursively finds the largest node in given subtree
         if (currentNode.getRightNode() != null) {
             return getLargest(currentNode.getRightNode());
         } else {
@@ -142,15 +142,62 @@ public class Tree {
 
         if (currentNode.getData() == dataToRemove) {
             if (currentNode.isLeaf()) {
-                // remove node if node is leaf
-                Node parent = currentNode.getParent();
+                if (currentNode != root) {
+                    // remove node if node is leaf
+                    Node parent = currentNode.getParent();
 
-                if (currentNode.getData() < parent.getData()) {
-                    parent.setLeftNode(null);
+                    if (currentNode.getData() < parent.getData()) {
+                        parent.setLeftNode(null);
+                    } else {
+                        parent.setRightNode(null);
+                    }
                 } else {
-                    parent.setRightNode(null);
+                    System.out.println("Cannot remove when root is only node");
                 }
+            } else if (currentNode == root) {
+                if (currentNode.getRightNode() != null && currentNode.getLeftNode() != null) {
+                    // remove node if node has 2 children
 
+                    Node replacement = getSmallest(currentNode.getRightNode());
+                    Node replaceRight = replacement.getRightNode();
+                    Node currentRight = currentNode.getRightNode();
+
+                    if (currentRight.getLeftNode() == null) {
+                        // for when replacement has no left node
+                        replacement.setParent(null);
+
+                        root = replacement;
+
+                        replacement.setLeftNode(currentNode.getLeftNode());
+                        replacement.getLeftNode().setParent(replacement);
+                    } else {
+                        // for when replacement has 2 children
+
+                        replacement.setParent(null);
+
+                        root = replacement;
+
+                        replacement.setLeftNode(currentNode.getLeftNode());
+                        replacement.getLeftNode().setParent(replacement);
+
+                        currentRight.setLeftNode(replaceRight);
+                        if (replaceRight != null) {
+                            replaceRight.setParent(currentRight);
+                        }
+
+                        replacement.setRightNode(currentRight);
+                        currentRight.setParent(replacement);
+                    }
+                } else {
+                    // root only has 1 child
+                    if (currentNode.getLeftNode() == null) {
+                        root = currentNode.getRightNode();
+                        root.setParent(null);
+                    } else {
+                        root = currentNode.getLeftNode();
+                        root.setParent(null);
+                    }
+                }
             } else if (currentNode.getRightNode() != null && currentNode.getLeftNode() != null) {
                 // remove node if node has 2 children
 
@@ -214,7 +261,7 @@ public class Tree {
 
                 replacement.setParent(parent);
             }
-
+        // current node not to be removed so recursively find
         } else if (dataToRemove < currentNode.getData()) {
             if (currentNode.getLeftNode() != null) {
                 removeNode(currentNode.getLeftNode(), dataToRemove);
@@ -343,7 +390,7 @@ public class Tree {
                 }
 
                 case "0" ->
-                    // set bool to false to break out of while loop
+                    // set bool as false to break out of while loop
                     runLoop = false;
                 default ->
                     System.out.println("Enter valid menu option");
