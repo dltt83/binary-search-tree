@@ -17,10 +17,11 @@ public class GUI extends Application {
         Integer treeWinY = 500;
 
         // instantiate new tree class
-        Tree tree1 = new Tree(new Node(null, null, null, 8));
+        Tree tree1 = new Tree(new Node(null, null, null, 1));
 
         // create list of nodes to be added
-        Integer[] nodesToAdd = {4, 12, 2, 6, 10, 14};
+//        Integer[] nodesToAdd = {4, 12, 2, 6, 10, 14};
+        Integer[] nodesToAdd = {2, 3, 4, 5, 6, 7};
 
         // loop through and add nodes to tree
         for (int node : nodesToAdd) {
@@ -90,8 +91,9 @@ public class GUI extends Application {
         addButton.setLayoutY(50);
         addButton.setOnAction(actionEvent -> {
             try {
-                Integer intInput = Integer.parseInt(inputField.getText());
+                int intInput = Integer.parseInt(inputField.getText());
                 tree1.addNode(tree1.getRoot(), new Node(null, null, null, intInput));
+                inputField.clear();
 
                 rootGroup.getChildren().remove(0);
                 rootGroup.getChildren().remove(0);
@@ -104,14 +106,14 @@ public class GUI extends Application {
         });
 
         // create button to remove nodes from tree
-        // create test button
         Button removeButton = new Button("Remove Node");
         removeButton.setLayoutX(treeWinX);
         removeButton.setLayoutY(100);
         removeButton.setOnAction(actionEvent -> {
             try {
-                Integer intInput = Integer.parseInt(inputField.getText());
+                int intInput = Integer.parseInt(inputField.getText());
                 tree1.removeNode(tree1.getRoot(), intInput);
+                inputField.clear();
 
                 rootGroup.getChildren().remove(0);
                 rootGroup.getChildren().remove(0);
@@ -123,8 +125,65 @@ public class GUI extends Application {
             }
         });
 
+        // create button to rotate about pivot
+        Button leftRotateButton = new Button("Rotate left on pivot");
+        leftRotateButton.setLayoutX(treeWinX);
+        leftRotateButton.setLayoutY(150);
+        leftRotateButton.setOnAction(actionEvent -> {
+            try {
+                int intInput = Integer.parseInt(inputField.getText());
+                tree1.rotateLeft(intInput);
+                inputField.clear();
+
+                rootGroup.getChildren().remove(0);
+                rootGroup.getChildren().remove(0);
+
+                rootGroup.getChildren().add(thisGroup);
+                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+            } catch (NumberFormatException ex) {
+                System.out.println("Not a number");
+            }
+        });
+
+        // create button to rotate about pivot
+        Button rightRotateButton = new Button("Rotate right on pivot");
+        rightRotateButton.setLayoutX(treeWinX);
+        rightRotateButton.setLayoutY(200);
+        rightRotateButton.setOnAction(actionEvent -> {
+            try {
+                int intInput = Integer.parseInt(inputField.getText());
+                tree1.rotateRight(intInput);
+                inputField.clear();
+
+                rootGroup.getChildren().remove(0);
+                rootGroup.getChildren().remove(0);
+
+                rootGroup.getChildren().add(thisGroup);
+                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+            } catch (NumberFormatException ex) {
+                System.out.println("Not a number");
+            }
+        });
+
+        // create button to rotate about pivot
+        Button balanceButton = new Button("Balance Tree");
+        balanceButton.setLayoutX(treeWinX);
+        balanceButton.setLayoutY(300);
+        balanceButton.setOnAction(actionEvent -> {
+            tree1.balance(tree1.getRoot());
+
+            rootGroup.getChildren().remove(0);
+            rootGroup.getChildren().remove(0);
+
+            rootGroup.getChildren().add(thisGroup);
+            getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+        });
+
         thisGroup.getChildren().add(addButton);
         thisGroup.getChildren().add(removeButton);
+        thisGroup.getChildren().add(leftRotateButton);
+        thisGroup.getChildren().add(rightRotateButton);
+        thisGroup.getChildren().add(balanceButton);
         thisGroup.getChildren().add(inputField);
 
         // add group to root
