@@ -71,7 +71,7 @@ public class Tree {
 
     public Node getNodeByData(Node currentNode, int dataToFind) {
         // searches down tree by looking through each node and comparing
-        if (currentNode.getData() < dataToFind) {
+        if (dataToFind < currentNode.getData()) {
             // checks of current node is a leaf
             if (currentNode.getLeftNode() != null) {
                 // recursively searches subtree
@@ -80,7 +80,7 @@ public class Tree {
                 // returns null as data is not in tree
                 return null;
             }
-        } else if (currentNode.getData() > dataToFind) {
+        } else if (dataToFind > currentNode.getData()) {
             if (currentNode.getRightNode() != null) {
                 // recursively searches down subtree
                 return getNodeByData(currentNode.getRightNode(), dataToFind);
@@ -276,30 +276,109 @@ public class Tree {
     public void rotateLeft(int point) {
         // performs left rotation on given pivot
 
-        Node pointNode = this.getNodeByData(this.root, point);
-        pointNode.printStat();
+        Node pointNode = getNodeByData(root, point);
         Node replacement = pointNode.getRightNode();
-        Node middle = replacement.getLeftNode();
+        Node parent = pointNode.getParent();
 
-        pointNode.setParent(replacement);
-        replacement.setLeftNode(pointNode);
+        if (replacement != null) {
+            Node middle = replacement.getLeftNode();
 
-        pointNode.setRightNode(middle);
-        middle.setParent(pointNode);
+            pointNode.setParent(replacement);
+            replacement.setLeftNode(pointNode);
+
+            pointNode.setRightNode(middle);
+            if (middle != null) {
+                middle.setParent(pointNode);
+            }
+
+            if (root == pointNode) {
+                root = replacement;
+                replacement.setParent(null);
+            } else {
+                replacement.setParent(parent);
+                if (replacement.getData() < parent.getData()) {
+                    parent.setLeftNode(replacement);
+                } else {
+                    parent.setRightNode(replacement);
+                }            }
+        } else {
+            System.out.println("Cannot rotate");
+        }
     }
 
     public void rotateRight(int point) {
         // performs right rotation on given pivot
 
-        Node pointNode = this.getNodeByData(this.root, point);
+        Node pointNode = getNodeByData(root, point);
         Node replacement = pointNode.getLeftNode();
-        Node middle = replacement.getRightNode();
+        Node parent = pointNode.getParent();
 
-        pointNode.setParent(replacement);
-        replacement.setRightNode(pointNode);
+        if (replacement != null) {
+            Node middle = replacement.getRightNode();
 
-        pointNode.setLeftNode(middle);
-        middle.setParent(pointNode);
+            pointNode.setParent(replacement);
+            replacement.setRightNode(pointNode);
+
+            pointNode.setLeftNode(middle);
+            if (middle != null) {
+                middle.setParent(pointNode);
+            }
+
+            if (root == pointNode) {
+                root = replacement;
+                replacement.setParent(null);
+            } else {
+                replacement.setParent(parent);
+                if (replacement.getData() < parent.getData()) {
+                    parent.setLeftNode(replacement);
+                } else {
+                    parent.setRightNode(replacement);
+                }
+            }
+        } else {
+            System.out.println("Cannot rotate");
+        }
+    }
+
+    public void balance(Node currentNode) {
+        Node leftNode = currentNode.getLeftNode();
+        Node rightNode = currentNode.getRightNode();
+
+        // check for both nodes
+        if (leftNode != null && rightNode != null) {
+            if (Math.abs(leftNode.getNodeHeight() - rightNode.getNodeHeight()) > 1) {
+
+                if (leftNode.getNodeHeight() > rightNode.getNodeHeight()) {
+                    rotateRight(currentNode.getData());
+                } else {
+                    rotateLeft(currentNode.getData());
+                }
+
+                balance(currentNode);
+            } else {
+                balance(leftNode);
+                balance(rightNode);
+            }
+        } else {
+            if (leftNode != null) {
+                if (leftNode.getNodeHeight() > 1) {
+                    rotateRight(currentNode.getData());
+                    balance(currentNode);
+                }
+            } else if (rightNode != null) {
+                if (rightNode.getNodeHeight() > 1) {
+                    rotateLeft(currentNode.getData());
+                    balance(currentNode);
+                }
+            }
+        }
+
+        if (leftNode != null) {
+            balance(leftNode);
+        }
+        if (rightNode != null) {
+            balance(rightNode);
+        }
     }
 
 
