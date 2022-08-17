@@ -77,6 +77,16 @@ public class GUI extends Application {
         rootGroup.getChildren().add(thisGroup);
     }
 
+    public void updateDisplay(TextField inputField, Group rootGroup, Group buttonGroup, Tree tree1, int treeWinX, int treeWinY) {
+        inputField.clear();
+
+        rootGroup.getChildren().remove(0);
+        rootGroup.getChildren().remove(0);
+
+        rootGroup.getChildren().add(buttonGroup);
+        getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+    }
+
     public void getInputGroup(Tree tree1, Group rootGroup, Integer treeWinX, Integer treeWinY) {
         Group thisGroup = new Group();
 
@@ -93,13 +103,8 @@ public class GUI extends Application {
             try {
                 int intInput = Integer.parseInt(inputField.getText());
                 tree1.addNode(tree1.getRoot(), new Node(null, null, null, intInput));
-                inputField.clear();
 
-                rootGroup.getChildren().remove(0);
-                rootGroup.getChildren().remove(0);
-
-                rootGroup.getChildren().add(thisGroup);
-                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+                updateDisplay(inputField, rootGroup, thisGroup, tree1, treeWinX, treeWinY);
             } catch (NumberFormatException ex) {
                 System.out.println("Not a number");
             }
@@ -113,13 +118,8 @@ public class GUI extends Application {
             try {
                 int intInput = Integer.parseInt(inputField.getText());
                 tree1.removeNode(tree1.getRoot(), intInput);
-                inputField.clear();
 
-                rootGroup.getChildren().remove(0);
-                rootGroup.getChildren().remove(0);
-
-                rootGroup.getChildren().add(thisGroup);
-                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+                updateDisplay(inputField, rootGroup, thisGroup, tree1, treeWinX, treeWinY);
             } catch (NumberFormatException ex) {
                 System.out.println("Not a number");
             }
@@ -133,13 +133,8 @@ public class GUI extends Application {
             try {
                 int intInput = Integer.parseInt(inputField.getText());
                 tree1.rotateLeft(intInput);
-                inputField.clear();
 
-                rootGroup.getChildren().remove(0);
-                rootGroup.getChildren().remove(0);
-
-                rootGroup.getChildren().add(thisGroup);
-                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+                updateDisplay(inputField, rootGroup, thisGroup, tree1, treeWinX, treeWinY);
             } catch (NumberFormatException ex) {
                 System.out.println("Not a number");
             }
@@ -153,13 +148,8 @@ public class GUI extends Application {
             try {
                 int intInput = Integer.parseInt(inputField.getText());
                 tree1.rotateRight(intInput);
-                inputField.clear();
 
-                rootGroup.getChildren().remove(0);
-                rootGroup.getChildren().remove(0);
-
-                rootGroup.getChildren().add(thisGroup);
-                getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+                updateDisplay(inputField, rootGroup, thisGroup, tree1, treeWinX, treeWinY);
             } catch (NumberFormatException ex) {
                 System.out.println("Not a number");
             }
@@ -172,11 +162,7 @@ public class GUI extends Application {
         balanceButton.setOnAction(actionEvent -> {
             tree1.balance(tree1.getRoot());
 
-            rootGroup.getChildren().remove(0);
-            rootGroup.getChildren().remove(0);
-
-            rootGroup.getChildren().add(thisGroup);
-            getTreeGroup(tree1, rootGroup, treeWinX, treeWinY);
+            updateDisplay(inputField, rootGroup, thisGroup, tree1, treeWinX, treeWinY);
         });
 
         thisGroup.getChildren().add(addButton);
